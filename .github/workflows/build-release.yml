@@ -48,11 +48,16 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Build native addon
-        run: bun --cwd=packages/natives run build
+      - name: Build native addon (Rust)
+        run: |
+          cd packages/natives
+          bun run build
+          ls native/
 
       - name: Build binary
-        run: bun --cwd=packages/coding-agent run build
+        run: |
+          cd packages/coding-agent
+          bun run build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
