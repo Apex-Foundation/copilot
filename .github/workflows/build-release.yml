@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
@@ -47,6 +50,7 @@ jobs:
         shell: bash
         env:
           TARGET_VARIANT: ${{ matrix.variant }}
+          RUSTFLAGS: "-A dead_code -A unused"
         run: |
           cd packages/natives
           bun run build
@@ -56,6 +60,7 @@ jobs:
         shell: bash
         env:
           TARGET_VARIANT: ${{ matrix.variant }}
+          RUSTFLAGS: "-A dead_code -A unused"
         run: |
           cd packages/coding-agent
           bun run build
@@ -83,6 +88,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -93,7 +100,7 @@ jobs:
           path: dist/
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: dist/**/*
           generate_release_notes: true
