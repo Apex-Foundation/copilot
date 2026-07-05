@@ -46,7 +46,6 @@ jobs:
       - name: Build native addon (Rust)
         shell: bash
         env:
-          CROSS_TARGET: ${{ matrix.target }}
           TARGET_VARIANT: ${{ matrix.variant }}
         run: |
           cd packages/natives
@@ -56,7 +55,6 @@ jobs:
       - name: Build binary
         shell: bash
         env:
-          CROSS_TARGET: ${{ matrix.target }}
           TARGET_VARIANT: ${{ matrix.variant }}
         run: |
           cd packages/coding-agent
