@@ -15,12 +15,15 @@ jobs:
           - os: ubuntu-latest
             target: linux-x64
             asset_name: apex-linux-x64
+            variant: modern
           - os: macos-latest
             target: darwin-arm64
             asset_name: apex-darwin-arm64
+            variant: ""
           - os: windows-latest
             target: windows-x64
             asset_name: apex-windows-x64.exe
+            variant: modern
 
     runs-on: ${{ matrix.os }}
 
@@ -44,6 +47,7 @@ jobs:
         shell: bash
         env:
           CROSS_TARGET: ${{ matrix.target }}
+          TARGET_VARIANT: ${{ matrix.variant }}
         run: |
           cd packages/natives
           bun run build
@@ -53,6 +57,7 @@ jobs:
         shell: bash
         env:
           CROSS_TARGET: ${{ matrix.target }}
+          TARGET_VARIANT: ${{ matrix.variant }}
         run: |
           cd packages/coding-agent
           bun run build
