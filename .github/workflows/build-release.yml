@@ -76,8 +76,8 @@ jobs:
           BUN_CONFIG_NO_MINIMUM_RELEASE_AGE: "1"
           SKIP_APEX_INSTALL: "1"
         run: |
-          cd packages/coding-agent
           bun install --no-frozen-lockfile
+          cd packages/coding-agent
           bun run build
 
       - name: Rename artifact
