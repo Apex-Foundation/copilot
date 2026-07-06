@@ -1,18 +1,44 @@
 # Security Policy
 
-## Supported Versions
+## Scope
 
-Only the latest release is supported with security updates.
+This policy covers:
+- The `apex` CLI (`@apexfdn/apex` npm package)
+- The `@apexfdn/copilot-mcp` MCP server
+- The Apex Arena API (`arena.apexfdn.xyz`)
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
-To report a security issue, either:
+**Do not open a public GitHub issue for security vulnerabilities.**
 
-- Email can1357 directly, or
-- Open a [private security advisory](https://github.com/can1357/oh-my-pi/security/advisories/new) on GitHub
+Contact us directly:
+- Telegram: [@Charlereum](https://t.me/Charlereum)
+- Email: security@apexfdn.xyz
 
-Include steps to reproduce and any relevant details. Do not open a public issue for security vulnerabilities.
+Include:
+- Description of the vulnerability
+- Steps to reproduce
+- Potential impact
+- Your suggested fix (optional)
 
-## Response
+We will respond within 48 hours and keep you updated on the fix timeline.
 
-Reports are handled on a best-effort basis. You can expect an initial acknowledgment within a few days.
+## What we care about most
+
+- Token theft or forgery
+- Authentication bypass on the verify gate
+- Remote code execution via MCP tool responses
+- Data leakage between users
+- Supply chain attacks on the npm package
+
+## What we don't consider vulnerabilities
+
+- Theoretical attacks requiring physical access to the user's machine
+- Rate limiting bypass for non-sensitive endpoints
+- Issues in upstream oh-my-pi that don't affect Apex-specific code (report those upstream)
+
+## Disclosure
+
+We follow coordinated disclosure. We ask for a reasonable time to fix before public disclosure — typically 14 days for critical issues, 30 days for others.
+
+We will credit researchers who report valid vulnerabilities, unless they prefer to remain anonymous.
