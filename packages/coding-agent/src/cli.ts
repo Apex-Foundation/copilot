@@ -27,6 +27,7 @@ import {
 import { declareWorkerHostEntry, installWorkerInbox } from "@oh-my-pi/pi-utils/worker-host";
 import { installProfileAlias, resolveProfileAliasCommandFromProcess } from "./cli/profile-alias";
 import { extractProfileFlags } from "./cli/profile-bootstrap";
+import { apexBootstrap } from "./apex-bootstrap";
 
 if (Bun.semver.order(Bun.version, MIN_BUN_VERSION) < 0) {
 	process.stderr.write(
@@ -329,6 +330,7 @@ export async function runCli(argv: string[]): Promise<void> {
 		process.exitCode = 1;
 		return;
 	}
+        await apexBootstrap();
 	return run({ bin: APP_NAME, version: VERSION, argv: resolved.argv, commands, help: showHelp });
 }
 

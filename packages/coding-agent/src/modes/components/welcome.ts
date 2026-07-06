@@ -451,15 +451,15 @@ export class WelcomeComponent implements Component {
 	}
 }
 
-export const PI_LOGO = ["▀██████████▀", " ╘██    ██  ", "  ██    ██  ", "  ██    ██  ", " ▄██▄  ▄██▄ "];
+export const PI_LOGO = ["   ▄████▄   ", "  ██    ██  ", "  ████████  ", "  ██    ██  ", "  ██    ██  "];
 
 /** Multi-stop palette for the diagonal gradient. */
 const GRADIENT_STOPS: ReadonlyArray<readonly [number, number, number]> = [
-	[255, 92, 200], // hot pink
-	[200, 110, 255], // violet
-	[120, 130, 255], // periwinkle
-	[60, 200, 255], // bright cyan
-	[120, 255, 220], // mint
+	[245, 245, 248], // near-white
+	[200, 200, 210], // cool silver
+	[160, 160, 175], // mid pewter
+	[200, 200, 210], // cool silver
+	[245, 245, 248], // near-white
 ];
 
 /** 256-color ramp fallback when truecolor isn't available. */

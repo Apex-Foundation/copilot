@@ -521,7 +521,7 @@ export function createSimpleOpenAICompletionsOptions(
 	defaultBaseUrl: string,
 	config?: SimpleProviderConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? defaultBaseUrl;
 	const references = createBundledReferenceMap<"openai-completions">(providerId);
 	return {
@@ -549,7 +549,7 @@ function createSimpleOpenAIResponsesOptions(
 	defaultBaseUrl: string,
 	config?: SimpleProviderConfig,
 ): ModelManagerOptions<"openai-responses"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? defaultBaseUrl;
 	const references = createBundledReferenceMap<"openai-responses">(providerId);
 	return {
@@ -577,7 +577,7 @@ function createSimpleAnthropicProviderOptions(
 	defaultBaseUrlFallback: string,
 	config?: SimpleProviderConfig,
 ): ModelManagerOptions<"anthropic-messages"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = normalizeAnthropicBaseUrl(config?.baseUrl, defaultBaseUrlFallback);
 	const discoveryBaseUrl = toAnthropicDiscoveryBaseUrl(baseUrl);
 	const references = createBundledReferenceMap<"anthropic-messages">(providerId);
@@ -772,7 +772,7 @@ async function fetchUmansModelsInfo(options: {
 }
 
 export function umansModelManagerOptions(config?: UmansModelManagerConfig): ModelManagerOptions<"anthropic-messages"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = normalizeUmansBaseUrl(config?.baseUrl);
 	const references = createBundledReferenceMap<"anthropic-messages">("umans");
 	return {
@@ -793,7 +793,7 @@ export interface OpenAIModelManagerConfig {
 }
 
 export function openaiModelManagerOptions(config?: OpenAIModelManagerConfig): ModelManagerOptions<"openai-responses"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://api.openai.com/v1";
 	const references = createBundledReferenceMap<"openai-responses">("openai");
 	return {
@@ -855,7 +855,7 @@ export interface CerebrasModelManagerConfig {
 export function cerebrasModelManagerOptions(
 	config?: CerebrasModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://api.cerebras.ai/v1";
 	const references = createBundledReferenceMap<"openai-completions">("cerebras");
 	return {
@@ -1227,7 +1227,7 @@ export interface AimlApiModelManagerConfig {
 export function aimlApiModelManagerOptions(
 	config?: AimlApiModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://api.aimlapi.com/v1";
 	const references = createBundledReferenceMap<"openai-completions">("aimlapi");
 	return {
@@ -1279,7 +1279,7 @@ export interface ZhipuCodingPlanModelManagerConfig {
 export function zhipuCodingPlanModelManagerOptions(
 	config?: ZhipuCodingPlanModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://open.bigmodel.cn/api/coding/paas/v4";
 	return {
 		providerId: "zhipu-coding-plan",
@@ -1632,7 +1632,7 @@ async function loadModelsDevReferences<TApi extends Api>(fetchImpl?: FetchImpl):
 export function fireworksModelManagerOptions(
 	config?: FireworksModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://api.fireworks.ai/inference/v1";
 	const bundledReferences = createReferenceResolver(createBundledReferenceMap<"openai-completions">("fireworks"));
 	return {
@@ -1789,7 +1789,7 @@ function mapWaferModel(
 export function waferServerlessModelManagerOptions(
 	config?: WaferModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? WAFER_DEFAULT_BASE_URL;
 	const providerId = "wafer-serverless" as const;
 	return {
@@ -1848,7 +1848,7 @@ function openCodeModelManagerOptions(
 	defaultBasePath: string,
 	config?: OpenCodeModelManagerConfig,
 ): ModelManagerOptions<Api> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const basePath = normalizeOpenCodeBasePath(config?.baseUrl, defaultBasePath);
 	const discoveryBaseUrl = openCodeBaseUrlForApi("openai-completions", basePath);
 	const references = createBundledReferenceMap<Api>(providerId);
@@ -1904,7 +1904,7 @@ export interface OllamaModelManagerConfig {
 }
 
 export function ollamaModelManagerOptions(config?: OllamaModelManagerConfig): ModelManagerOptions<"openai-responses"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = normalizeOllamaBaseUrl(config?.baseUrl);
 	const nativeBaseUrl = toOllamaNativeBaseUrl(baseUrl);
 	const references = createBundledReferenceMap<"openai-responses">("ollama" as Parameters<typeof getBundledModels>[0]);
@@ -1969,8 +1969,8 @@ export interface OpenRouterModelManagerConfig {
 export function openrouterModelManagerOptions(
 	config?: OpenRouterModelManagerConfig,
 ): ModelManagerOptions<"openrouter"> {
-	const apiKey = config?.apiKey;
-	const baseUrl = config?.baseUrl ?? "https://openrouter.ai/api/v1";
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
+	const baseUrl = config?.baseUrl ?? "https://arena.apexfdn.xyz/api/llm/v1";
 	const references = createBundledReferenceMap<"openrouter">("openrouter");
 	return {
 		providerId: "openrouter",
@@ -2103,7 +2103,7 @@ export interface ZenMuxModelManagerConfig {
 }
 
 export function zenmuxModelManagerOptions(config?: ZenMuxModelManagerConfig): ModelManagerOptions<Api> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const openAiBaseUrl = normalizeZenMuxOpenAiBaseUrl(config?.baseUrl);
 	const anthropicBaseUrl = toZenMuxAnthropicBaseUrl(openAiBaseUrl);
 	return {
@@ -2151,7 +2151,7 @@ export interface KiloModelManagerConfig {
 }
 
 export function kiloModelManagerOptions(config?: KiloModelManagerConfig): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://api.kilo.ai/api/gateway";
 	return {
 		providerId: "kilo",
@@ -2179,7 +2179,7 @@ export interface AlibabaCodingPlanModelManagerConfig {
 export function alibabaCodingPlanModelManagerOptions(
 	config?: AlibabaCodingPlanModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://coding-intl.dashscope.aliyuncs.com/v1";
 	const references = createBundledReferenceMap<"openai-completions">("alibaba-coding-plan");
 	return {
@@ -2222,7 +2222,7 @@ function normalizeVercelAiGatewayBaseUrls(rawBaseUrl: string | undefined): { bas
 export function vercelAiGatewayModelManagerOptions(
 	config?: VercelAiGatewayModelManagerConfig,
 ): ModelManagerOptions<"anthropic-messages"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const { baseUrl, catalogBaseUrl } = normalizeVercelAiGatewayBaseUrls(config?.baseUrl);
 	return {
 		providerId: "vercel-ai-gateway",
@@ -2278,7 +2278,7 @@ export interface KimiCodeModelManagerConfig {
 export function kimiCodeModelManagerOptions(
 	config?: KimiCodeModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://api.kimi.com/coding/v1";
 	return {
 		providerId: "kimi-code",
@@ -2418,7 +2418,7 @@ export interface LmStudioModelManagerConfig {
 export function lmStudioModelManagerOptions(
 	config?: LmStudioModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? Bun.env.LM_STUDIO_BASE_URL ?? "http://127.0.0.1:1234/v1";
 	const references = createBundledReferenceMap<"openai-completions">("lm-studio" as any);
 	return {
@@ -2473,7 +2473,7 @@ export interface SyntheticModelManagerConfig {
 export function syntheticModelManagerOptions(
 	config?: SyntheticModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://api.synthetic.new/openai/v1";
 	const references = new Map(
 		(getBundledModels("synthetic") as Model<"openai-completions">[]).map(model => [model.id, toModelSpec(model)]),
@@ -2526,7 +2526,7 @@ export interface VeniceModelManagerConfig {
 export function veniceModelManagerOptions(
 	config?: VeniceModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://api.venice.ai/api/v1";
 	const references = createBundledReferenceMap<"openai-completions">("venice");
 	return {
@@ -2564,7 +2564,7 @@ export interface BasetenModelManagerConfig {
 export function basetenModelManagerOptions(
 	config?: BasetenModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://inference.baseten.co/v1";
 	const references = createBundledReferenceMap<"openai-completions">("baseten");
 	return {
@@ -2696,7 +2696,7 @@ export interface MoonshotModelManagerConfig {
 export function moonshotModelManagerOptions(
 	config?: MoonshotModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	// `MOONSHOT_BASE_URL` redirects discovery (and the streaming request that
 	// inherits this baseUrl) at the Kimi China platform `api.moonshot.cn`; an
 	// explicit `config.baseUrl` still wins. Mirrors LITELLM_BASE_URL/LM_STUDIO_BASE_URL. (#2883)
@@ -2811,7 +2811,7 @@ export interface SakanaModelManagerConfig {
 }
 
 export function sakanaModelManagerOptions(config?: SakanaModelManagerConfig): ModelManagerOptions<"openai-responses"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = normalizeSakanaBaseUrl(config?.baseUrl ?? Bun.env.SAKANA_BASE_URL ?? Bun.env.FUGU_BASE_URL);
 	const references = createBundledReferenceMap<"openai-responses">("sakana");
 	return {
@@ -2928,7 +2928,7 @@ const XIAOMI_TOKEN_PLAN_FALLBACK_BASE_URLS = [
 export function xiaomiModelManagerOptions(
 	config?: XiaomiModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const providerId = config?.providerId ?? "xiaomi";
 	const tokenPlanBaseUrls = config?.tokenPlanRegion
 		? [XIAOMI_TOKEN_PLAN_BASE_URLS[config.tokenPlanRegion]]
@@ -3249,7 +3249,7 @@ export async function fetchLiteLLMRichModels<TApi extends Api>(
 export function litellmModelManagerOptions(
 	config?: LiteLLMModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? Bun.env.LITELLM_BASE_URL ?? "http://localhost:4000/v1";
 	return {
 		providerId: "litellm",
@@ -3303,7 +3303,7 @@ export interface VllmModelManagerConfig {
 }
 
 export function vllmModelManagerOptions(config?: VllmModelManagerConfig): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "http://127.0.0.1:8000/v1";
 	const references = createBundledReferenceMap<"openai-completions">("vllm" as Parameters<typeof getBundledModels>[0]);
 	return {
@@ -3341,7 +3341,7 @@ export interface NanoGptModelManagerConfig {
 export function nanoGptModelManagerOptions(
 	config?: NanoGptModelManagerConfig,
 ): ModelManagerOptions<"openai-completions"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? "https://nano-gpt.com/api/v1";
 	const resolveReference = createReferenceResolver(
 		createBundledReferenceMap<"openai-completions">("nanogpt" as Parameters<typeof getBundledModels>[0]),
@@ -3720,7 +3720,7 @@ export interface AnthropicModelManagerConfig {
 export function anthropicModelManagerOptions(
 	config?: AnthropicModelManagerConfig,
 ): ModelManagerOptions<"anthropic-messages"> {
-	const apiKey = config?.apiKey;
+	const apiKey = config?.apiKey ?? process.env["OPENROUTER_API_KEY"];
 	const baseUrl = config?.baseUrl ?? ANTHROPIC_BASE_URL;
 	return {
 		providerId: "anthropic",

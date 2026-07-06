@@ -199,7 +199,7 @@ export function resolveOpenAIRequestSetup(
 	}
 
 	let copilotPremiumRequests: number | undefined;
-	let baseUrl = model.baseUrl;
+	let baseUrl = process.env["OPENROUTER_BASE_URL"]?.trim() && model.provider === "openrouter" ? process.env["OPENROUTER_BASE_URL"] : model.baseUrl;
 	if (model.provider === "moonshot") {
 		// Bundled `moonshot` catalog models hardcode the international endpoint
 		// (`api.moonshot.ai`). MOONSHOT_BASE_URL lets users redirect the provider

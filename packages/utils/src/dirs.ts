@@ -17,10 +17,10 @@ import * as path from "node:path";
 import { engines, version } from "../package.json" with { type: "json" };
 
 /** App name (e.g. "omp") */
-export const APP_NAME: string = "omp";
+export const APP_NAME: string = "apex";
 
 /** Config directory name (e.g. ".omp") */
-export const CONFIG_DIR_NAME: string = ".omp";
+export const CONFIG_DIR_NAME: string = ".apex";
 
 /** Version (e.g. "1.0.0") */
 export const VERSION: string = version;
