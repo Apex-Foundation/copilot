@@ -47,7 +47,7 @@ jobs:
         env:
           BUN_CONFIG_NO_MINIMUM_RELEASE_AGE: "1"
           SKIP_APEX_INSTALL: "1"
-        run: bun install --no-frozen-lockfile --ignore-scripts
+        run: bun install --no-frozen-lockfile
 
       - name: Install optional dependencies
         shell: bash
