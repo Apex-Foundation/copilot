@@ -26,7 +26,7 @@ jobs:
           - os: windows-latest
             target: windows-x64
             asset_name: apex-windows-x64.exe
-            variant: modern
+            variant: baseline
 
     runs-on: ${{ matrix.os }}
 
