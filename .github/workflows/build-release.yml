@@ -55,6 +55,16 @@ jobs:
           cd packages/coding-agent
           bun add @huggingface/transformers mupdf --no-save 2>/dev/null || true
 
+      - name: Link workspace packages
+        shell: bash
+        run: |
+          bun --cwd=packages/utils link
+          bun --cwd=packages/ai link
+          bun --cwd=packages/catalog link
+          bun --cwd=packages/tui link
+          bun --cwd=packages/natives link
+          bun --cwd=packages/coding-agent link
+
       - name: Build native addon (Rust)
         shell: bash
         env:
