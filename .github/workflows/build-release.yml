@@ -51,19 +51,12 @@ jobs:
 
       - name: Install optional dependencies
         shell: bash
+        env:
+          BUN_CONFIG_NO_MINIMUM_RELEASE_AGE: "1"
+          SKIP_APEX_INSTALL: "1"
         run: |
           cd packages/coding-agent
           bun add @huggingface/transformers mupdf --no-save 2>/dev/null || true
-
-      - name: Link workspace packages
-        shell: bash
-        run: |
-          bun --cwd=packages/utils link
-          bun --cwd=packages/ai link
-          bun --cwd=packages/catalog link
-          bun --cwd=packages/tui link
-          bun --cwd=packages/natives link
-          bun --cwd=packages/coding-agent link
 
       - name: Build native addon (Rust)
         shell: bash
@@ -80,8 +73,11 @@ jobs:
         env:
           TARGET_VARIANT: ${{ matrix.variant }}
           RUSTFLAGS: "-A dead_code -A unused"
+          BUN_CONFIG_NO_MINIMUM_RELEASE_AGE: "1"
+          SKIP_APEX_INSTALL: "1"
         run: |
           cd packages/coding-agent
+          bun install --no-frozen-lockfile
           bun run build
 
       - name: Rename artifact
