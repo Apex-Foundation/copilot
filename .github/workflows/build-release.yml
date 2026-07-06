@@ -49,17 +49,11 @@ jobs:
           SKIP_APEX_INSTALL: "1"
         run: bun install --no-frozen-lockfile
 
-      - name: Debug workspace
-        shell: bash
-        run: |
-          echo "=== root node_modules/@oh-my-pi ==="
-          ls node_modules/@oh-my-pi/ || echo "NOT FOUND in root"
-
       - name: Create workspace symlinks
         shell: bash
         run: |
           mkdir -p node_modules/@oh-my-pi
-          for pkg in packages/utils packages/ai packages/catalog packages/tui packages/natives packages/wire packages/agent-core packages/stats; do
+          for pkg in packages/agent packages/ai packages/catalog packages/tui packages/natives packages/wire packages/utils packages/stats packages/mnemopi packages/hashline packages/snapcompact; do
             if [ -f "$pkg/package.json" ]; then
               name=$(cat $pkg/package.json | python3 -c "import sys,json; print(json.load(sys.stdin)['name'].split('/')[-1])")
               ln -sf "$(pwd)/$pkg" "node_modules/@oh-my-pi/$name" 2>/dev/null || true
