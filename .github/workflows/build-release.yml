@@ -57,6 +57,19 @@ jobs:
           echo "=== coding-agent node_modules/@oh-my-pi ==="
           ls packages/coding-agent/node_modules/@oh-my-pi/ 2>/dev/null || echo "NOT FOUND in coding-agent"
 
+      - name: Create workspace symlinks
+        shell: bash
+        run: |
+          mkdir -p node_modules/@oh-my-pi
+          for pkg in packages/utils packages/ai packages/catalog packages/tui packages/natives packages/wire packages/agent-core; do
+            if [ -f "$pkg/package.json" ]; then
+              name=$(cat $pkg/package.json | python3 -c "import sys,json; print(json.load(sys.stdin)['name'].split('/')[-1])")
+              ln -sf "$(pwd)/$pkg" "node_modules/@oh-my-pi/$name" 2>/dev/null || true
+              echo "Linked $name -> $pkg"
+            fi
+          done
+          ls node_modules/@oh-my-pi/
+
       - name: Install optional dependencies
         shell: bash
         env:
