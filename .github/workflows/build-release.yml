@@ -49,6 +49,14 @@ jobs:
           SKIP_APEX_INSTALL: "1"
         run: bun install --no-frozen-lockfile
 
+      - name: Debug workspace
+        shell: bash
+        run: |
+          echo "=== root node_modules/@oh-my-pi ==="
+          ls node_modules/@oh-my-pi/ || echo "NOT FOUND in root"
+          echo "=== coding-agent node_modules/@oh-my-pi ==="
+          ls packages/coding-agent/node_modules/@oh-my-pi/ 2>/dev/null || echo "NOT FOUND in coding-agent"
+
       - name: Install optional dependencies
         shell: bash
         env:
