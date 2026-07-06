@@ -53,7 +53,7 @@ jobs:
         shell: bash
         run: |
           cd packages/coding-agent
-          bun add @huggingface/transformers --no-save 2>/dev/null || true
+          bun add @huggingface/transformers mupdf --no-save 2>/dev/null || true
 
       - name: Build native addon (Rust)
         shell: bash
