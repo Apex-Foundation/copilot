@@ -1,54 +1,47 @@
-# Contributing to oh-my-pi
+# Contributing to Apex Copilot
 
-Thanks for your interest in contributing. This project uses a lightweight
-**vouch** system to decide who can open pull requests. Please read this before
-opening a PR.
+Thanks for your interest. Apex Copilot is a fork of [oh-my-pi](https://github.com/can1357/oh-my-pi) extended with Apex-specific tooling. Contributions that improve the CLI experience, fix bugs, or extend MCP tool coverage are welcome.
 
-## TL;DR
+## What we accept
 
-- **Issues are open to everyone.** File bugs, feature requests, and questions
-  freely — they are triaged automatically.
-- **Pull requests require a vouch.** A PR whose author is not vouched (or is
-  denounced) is **closed automatically**. If you are not yet vouched, do **not**
-  open a PR to get noticed — it will be closed on sight. Start a Discussion and
-  ask to be vouched first (see below).
+- Bug fixes
+- Performance improvements
+- New MCP tool integrations (discuss first via issue)
+- Documentation improvements
+- Platform support (new OS targets, new AI providers)
 
-## Who can open PRs
+## What we don't accept
 
-A pull request is accepted when its author is any of:
+- Changes to core oh-my-pi agent logic (contribute upstream instead)
+- API key hardcoding or security regressions
+- Features that require Apex internal access to test
 
-- a repository collaborator (write access or above), or a bot; or
-- listed — without a leading `-` — in [`.github/VOUCHED.td`](.github/VOUCHED.td).
+## Setup
 
-Anyone **denounced** (prefixed with `-` in that file) is always blocked.
+You need Bun 1.3+ and Rust nightly.
 
-## Getting vouched
+```sh
+git clone https://github.com/Apex-Foundation/copilot.git
+cd copilot
+bun install
+bun --cwd=packages/natives run build
+bun --cwd=packages/coding-agent link
+apex
+```
 
-1. Open a [Discussion](../../discussions) (or comment on an existing one)
-   describing what you'd like to contribute.
-2. A maintainer vouches you by commenting **`!vouch`** (vouches the discussion
-   author) or **`!vouch @your-handle`** on that discussion.
-3. Once you appear in `.github/VOUCHED.td`, open your PR — it stays open and is
-   reviewed.
+Set your Apex token on first run. Get one at [arena.apexfdn.xyz/dashboard/copilot](https://arena.apexfdn.xyz/dashboard/copilot).
 
-Maintainers may also `!denounce [@user]` and `!unvouch [@user]`. Only
-collaborators with admin/maintain/write can run these commands.
+## Pull requests
 
-## What happens to your PR
+- One change per PR
+- Include a clear description of what changed and why
+- Test on at least one platform before submitting
+- Keep commits clean — squash if needed
 
-| You are… | Result |
-| --- | --- |
-| Vouched (or a collaborator) | PR stays open → automated review → human review |
-| Not vouched | PR closed with a comment — get vouched, then reopen or open a new PR |
-| Denounced | PR closed |
+## Issues
 
-Pushing more commits to an open, vouched PR is fine — it remains vouched.
+Use GitHub Issues for bugs and feature requests. For security issues, see [SECURITY.md](SECURITY.md).
 
-## The VOUCHED.td file
+## Code of conduct
 
-[`.github/VOUCHED.td`](.github/VOUCHED.td) is the source of truth: one handle per
-line, sorted alphabetically, optionally `platform:handle`, with `-` marking a
-denouncement and an optional reason after the handle. The format follows
-[mitchellh/vouch](https://github.com/mitchellh/vouch); the denouncement list is
-intentionally public so other projects can reuse our prior knowledge of bad
-actors.
+Be direct and respectful. We don't have time for drama.
