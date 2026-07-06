@@ -44,6 +44,8 @@ jobs:
           toolchain: nightly
 
       - name: Install dependencies
+        env:
+          BUN_CONFIG_NO_MINIMUM_RELEASE_AGE: "1"
         run: bun install --no-frozen-lockfile
 
       - name: Build native addon (Rust)
