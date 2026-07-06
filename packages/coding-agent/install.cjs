@@ -34,6 +34,10 @@ function download(url, dest) {
 }
 
 async function install() {
+  if (process.env.CI || process.env.SKIP_APEX_INSTALL) {
+    console.log('Skipping binary download in CI.')
+    return
+  }
   const target = getPlatformTarget()
   const isWin = process.platform === 'win32'
   const assetName = isWin ? `apex-${target}.exe` : `apex-${target}`
