@@ -42,7 +42,11 @@
     "@oh-my-pi/pi-utils": "catalog:",
     "@oh-my-pi/pi-wire": "catalog:",
     "arktype": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "lru-cache": "11.5.1",
+    "chalk": "^5.6.2",
+    "diff": "^9.0.0",
+    "handlebars": "^4.7.9"
   },
   "devDependencies": {
     "@bufbuild/protoc-gen-es": "catalog:",

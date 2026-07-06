@@ -34,7 +34,12 @@
     "@oh-my-pi/pi-natives": "catalog:",
     "handlebars": "catalog:",
     "winston": "catalog:",
-    "winston-daily-rotate-file": "catalog:"
+    "winston-daily-rotate-file": "catalog:",
+    "arktype": "^2.2.0",
+    "zod": "^4",
+    "lru-cache": "11.5.1",
+    "chalk": "^5.6.2",
+    "diff": "^9.0.0"
   },
   "devDependencies": {
     "@types/bun": "catalog:"
