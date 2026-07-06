@@ -49,19 +49,6 @@ jobs:
           SKIP_APEX_INSTALL: "1"
         run: bun install --no-frozen-lockfile
 
-      - name: Create workspace symlinks
-        shell: bash
-        run: |
-          mkdir -p node_modules/@oh-my-pi
-          for pkg in packages/agent packages/ai packages/catalog packages/tui packages/natives packages/wire packages/utils packages/stats packages/mnemopi packages/hashline packages/snapcompact; do
-            if [ -f "$pkg/package.json" ]; then
-              name=$(cat $pkg/package.json | python3 -c "import sys,json; print(json.load(sys.stdin)['name'].split('/')[-1])")
-              ln -sf "$(pwd)/$pkg" "node_modules/@oh-my-pi/$name" 2>/dev/null || true
-              echo "Linked $name -> $pkg"
-            fi
-          done
-          ls node_modules/@oh-my-pi/
-
       - name: Install optional dependencies
         shell: bash
         env:
@@ -90,6 +77,13 @@ jobs:
           SKIP_APEX_INSTALL: "1"
         run: |
           bun install --no-frozen-lockfile
+          mkdir -p node_modules/@oh-my-pi
+          for pkg in packages/agent packages/ai packages/catalog packages/tui packages/natives packages/wire packages/utils packages/stats packages/mnemopi packages/hashline packages/snapcompact; do
+            if [ -f "$pkg/package.json" ]; then
+              name=$(cat $pkg/package.json | python3 -c "import sys,json; print(json.load(sys.stdin)['name'].split('/')[-1])")
+              ln -sf "$(pwd)/$pkg" "node_modules/@oh-my-pi/$name" 2>/dev/null || true
+            fi
+          done
           cd packages/coding-agent
           bun run build
 
