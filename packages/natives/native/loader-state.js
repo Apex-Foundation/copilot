@@ -53,7 +53,7 @@ function getNativesDir() {
 	if (xdgDataHome && fs.existsSync(path.join(xdgDataHome, "omp"))) {
 		return path.join(xdgDataHome, "omp", "natives");
 	}
-	return path.join(os.homedir(), ".omp", "natives");
+	return path.join(os.homedir(), ".apex", "natives");
 }
 
 function resolveLeafPackageDir(platformTag) {
