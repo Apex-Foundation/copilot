@@ -89,6 +89,15 @@ jobs:
           cd packages/coding-agent
           bun run build
 
+      - name: Debug embedded addon
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "=== native dir ==="
+          ls packages/natives/native/
+          echo "=== embedded-addon.js ==="
+          head -30 packages/natives/native/embedded-addon.js
+
       - name: Rename artifact
         shell: bash
         run: |
