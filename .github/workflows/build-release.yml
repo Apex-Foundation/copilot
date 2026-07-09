@@ -80,16 +80,6 @@ jobs:
           bun run build
           ls native/
 
-      - name: Debug gen:native (Windows)
-        if: runner.os == 'Windows'
-        shell: bash
-        run: |
-          cd packages/coding-agent
-          bun --cwd=../natives run gen:native 2>&1 || true
-          echo "=== after gen:native ==="
-          ls ../natives/native/
-          cat ../natives/native/embedded-addon.js
-
       - name: Build binary
         shell: bash
         env:
@@ -97,16 +87,10 @@ jobs:
           RUSTFLAGS: "-A dead_code -A unused"
         run: |
           cd packages/coding-agent
+          bun --cwd=../natives run gen:native 2>&1
+          echo "=== embedded-addon.js before compile ==="
+          cat ../natives/native/embedded-addon.js | tail -20
           bun run build
-
-      - name: Debug embedded addon
-        if: runner.os == 'Windows'
-        shell: bash
-        run: |
-          echo "=== native dir after build ==="
-          ls packages/natives/native/
-          echo "=== embedded-addon.js after build ==="
-          cat packages/natives/native/embedded-addon.js
 
       - name: Rename artifact
         shell: bash
