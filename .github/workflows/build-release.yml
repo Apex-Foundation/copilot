@@ -88,7 +88,7 @@ jobs:
           bun --cwd=../natives run gen:native 2>&1 || true
           echo "=== after gen:native ==="
           ls ../natives/native/
-          head -5 ../natives/native/embedded-addon.js
+          cat ../natives/native/embedded-addon.js
 
       - name: Build binary
         shell: bash
@@ -103,10 +103,10 @@ jobs:
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          echo "=== native dir ==="
+          echo "=== native dir after build ==="
           ls packages/natives/native/
-          echo "=== embedded-addon.js ==="
-          head -30 packages/natives/native/embedded-addon.js
+          echo "=== embedded-addon.js after build ==="
+          cat packages/natives/native/embedded-addon.js
 
       - name: Rename artifact
         shell: bash
