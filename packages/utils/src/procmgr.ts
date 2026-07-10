@@ -113,7 +113,7 @@ export function getShellConfig(customShellPath?: string): ShellConfig {
 			return cachedShellConfig;
 		}
 		throw new Error(
-			`Custom shell path not found: ${customShellPath}\nPlease update shellPath in ~/.omp/agent/settings.json`,
+			`Custom shell path not found: ${customShellPath}\nPlease update shellPath in ~/.apex/agent/settings.json`,
 		);
 	}
 
@@ -142,12 +142,22 @@ export function getShellConfig(customShellPath?: string): ShellConfig {
 			cachedShellConfig = buildConfig(bashOnPath);
 			return cachedShellConfig;
 		}
+		// 4. Fallback: use PowerShell on Windows
+		for (const psPath of [
+			"C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+			"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+		]) {
+			if (fs.existsSync(psPath)) {
+				cachedShellConfig = buildConfig(psPath);
+				return cachedShellConfig;
+			}
+		}
 
 		throw new Error(
 			`No bash shell found. Options:\n` +
 				`  1. Install Git for Windows: https://git-scm.com/download/win\n` +
 				`  2. Add your bash to PATH (Cygwin, MSYS2, etc.)\n` +
-				`  3. Set shellPath in ~/.omp/agent/settings.json\n\n` +
+				`  3. Set shellPath in ~/.apex/agent/settings.json\n\n` +
 				`Searched Git Bash in:\n${paths.map(p => `  ${p}`).join("\n")}`,
 		);
 	}
