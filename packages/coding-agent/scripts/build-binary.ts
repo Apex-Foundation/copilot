@@ -70,7 +70,7 @@ async function main(): Promise<void> {
 		);
 		await runCommand(["bun", "run", "gen:mupdf"]);
 		const _emb = await Bun.file("../natives/native/embedded-addon.js").text();
-		console.log("[DEBUG] embedded-addon before compile:", _emb.split("\n").slice(-4).join("\n"));
+		process.stderr.write("[DEBUG] embedded-addon before compile: " + _emb.split("\n").slice(-4).join("\n") + "\n");
 		// Regenerate the bundled-pi registry + key set before the compile so any
 		// new pi-* subpath export added under `packages/*/package.json` is served
 		// from the host's in-process copy. Without this, `bun build --compile`
