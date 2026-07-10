@@ -88,9 +88,14 @@ jobs:
         run: |
           cd packages/coding-agent
           bun --cwd=../natives run gen:native 2>&1
-          echo "=== embedded-addon.js before compile ==="
-          cat ../natives/native/embedded-addon.js | tail -20
           bun run build
+
+      - name: Upload native addon (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pi_natives-windows-x64
+          path: packages/natives/native/pi_natives.win32-x64-baseline.node
 
       - name: Rename artifact
         shell: bash
