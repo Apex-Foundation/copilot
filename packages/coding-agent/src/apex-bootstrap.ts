@@ -191,6 +191,14 @@ export async function apexBootstrap(): Promise<void> {
         `sqlite3 "${dbPath}" "INSERT OR REPLACE INTO settings(key,value,updated_at) VALUES('model','${model}',${now});"`,
         { stdio: "ignore" }
       );
+      // On Windows, set shellPath to PowerShell automatically
+      if (process.platform === "win32") {
+        const psPath = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe";
+        execSync(
+          `sqlite3 "${dbPath}" "INSERT OR REPLACE INTO settings(key,value,updated_at) VALUES('shellPath','${psPath}',${now});"`,
+          { stdio: "ignore" }
+        );
+      }
     }
   } catch {}
 }
