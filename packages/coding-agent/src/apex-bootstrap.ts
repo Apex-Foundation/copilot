@@ -185,7 +185,7 @@ export async function apexBootstrap(): Promise<void> {
     const dbPath = path.join(agentDir, "agent.db");
     if (fs.existsSync(dbPath)) {
       const { execSync } = await import("node:child_process");
-      const model = "openrouter/google/gemini-2.5-flash";
+      const model = "openrouter/deepseek/deepseek-chat";
       const now = Math.floor(Date.now() / 1000);
       execSync(
         `sqlite3 "${dbPath}" "INSERT OR REPLACE INTO settings(key,value,updated_at) VALUES('model','${model}',${now});"`,
