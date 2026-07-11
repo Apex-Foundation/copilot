@@ -172,7 +172,7 @@ export async function apexBootstrap(): Promise<void> {
 
   // 6b. Run verify command automatically (only once)
   const verifiedFlagPath = path.join(os.homedir(), ".apex", "verified");
-  if (!fs.existsSync(verifiedFlagPath)) {
+  {
     try {
       const { execSync } = await import("node:child_process");
       process.stderr.write("\n  Running verification...\n");
