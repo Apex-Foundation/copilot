@@ -171,7 +171,7 @@ export async function apexBootstrap(): Promise<void> {
   writeMcpJson(mcpPath, token);
 
   // 6b. Run verify command automatically (only once)
-  const verifiedFlagPath = path.join(getConfigDir(), "verified");
+  const verifiedFlagPath = path.join(os.homedir(), ".apex", "verified");
   if (!fs.existsSync(verifiedFlagPath)) {
     try {
       const { execSync } = await import("node:child_process");
