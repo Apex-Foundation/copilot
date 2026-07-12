@@ -190,7 +190,7 @@ export async function apexBootstrap(): Promise<void> {
         fs.writeFileSync(verifiedFlagPath, "1", { mode: 0o600 });
         process.stdout.write("  Verification successful!\n");
       }
-    } catch (e: unknown) { process.stdout.write("  Verify error: " + String(e) + "\n"); }
+    } catch (e: unknown) { process.stdout.write("  Verify error: " + String(e) + "\n"); await new Promise(r => setTimeout(r, 5000)); }
   }
   // 7. Mark setup as complete so the wizard doesn't run
   //    setupVersion=1 matches CURRENT_SETUP_VERSION in setup-version.ts
