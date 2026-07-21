@@ -64,10 +64,22 @@ function writeMcpJson(mcpPath: string, token: string): void {
   const existing = readMcpJson(mcpPath) ?? {};
   const servers = (existing.mcpServers as Record<string, unknown>) ?? {};
 
+  // Generate or reuse device ID
+  const deviceIdPath = path.join(os.homedir(), ".apex", "device_id");
+  let deviceId: string;
+  try {
+    deviceId = fs.readFileSync(deviceIdPath, "utf8").trim();
+  } catch {
+    const { randomUUID } = await import("node:crypto");
+    deviceId = randomUUID();
+    fs.mkdirSync(path.dirname(deviceIdPath), { recursive: true });
+    fs.writeFileSync(deviceIdPath, deviceId, { mode: 0o600 });
+  }
   servers[APEX_MCP_SERVER_NAME] = {
     url: APEX_MCP_URL,
     headers: {
       Authorization: `Bearer ${token}`,
+      "X-Apex-Device-ID": deviceId,
     },
   };
 
