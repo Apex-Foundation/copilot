@@ -70,8 +70,8 @@ function writeMcpJson(mcpPath: string, token: string): void {
   try {
     deviceId = fs.readFileSync(deviceIdPath, "utf8").trim();
   } catch {
-    const { randomUUID } = await import("node:crypto");
-    deviceId = randomUUID();
+    const crypto = require("node:crypto");
+    deviceId = crypto.randomUUID();
     fs.mkdirSync(path.dirname(deviceIdPath), { recursive: true });
     fs.writeFileSync(deviceIdPath, deviceId, { mode: 0o600 });
   }
