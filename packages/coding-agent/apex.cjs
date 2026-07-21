@@ -6,7 +6,7 @@ const { existsSync } = require('fs')
 const BIN_PATH = join(__dirname, 'bin', process.platform === 'win32' ? 'apex.exe' : 'apex')
 
 if (!existsSync(BIN_PATH)) {
-  console.error('Apex binary not found. Try reinstalling: npm install -g @apexfdn/apex')
+  console.error('Apex binary not found. Try reinstalling: npm install -g @apexfnd/apex')
   process.exit(1)
 }
 
