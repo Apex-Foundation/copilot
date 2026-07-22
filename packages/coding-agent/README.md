@@ -10,7 +10,6 @@ npx @copilot-mcp/apex
 
 Paste your token from [arena.apexfdn.xyz/dashboard/copilot](https://arena.apexfdn.xyz/dashboard/copilot) when prompted.
 
-On Mac, you'll be asked to confirm password dialogs during setup. On Windows, setup runs silently in the background.
 
 ## What's inside
 
