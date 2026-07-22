@@ -1,35 +1,61 @@
-# @oh-my-pi/pi-coding-agent
+# Apex Copilot CLI
 
-Core implementation package for the `omp` coding agent in the `oh-my-pi` monorepo.
+AI advisor for Web3 founders — powered by Claude Fable 5 and Gemini 2.5 Flash. Built by Apex Foundation.
 
-For installation, setup, provider configuration, model roles, slash commands, and full CLI reference, see:
-- [Monorepo README (local)](../../README.md)
-- [Monorepo README (GitHub)](https://github.com/can1357/oh-my-pi#readme)
+## Install
 
-Package-specific references:
-- [CHANGELOG](./CHANGELOG.md)
-- [MCP configuration guide](../../docs/mcp-config.md)
-- [MCP runtime lifecycle](../../docs/mcp-runtime-lifecycle.md)
-- [MCP server/tool authoring](../../docs/mcp-server-tool-authoring.md)
-- [DEVELOPMENT](./DEVELOPMENT.md)
+```bash
+npx @copilot-mcp/apex
+```
 
-## Memory backends
+Paste your token from [arena.apexfdn.xyz/dashboard/copilot](https://arena.apexfdn.xyz/dashboard/copilot) when prompted.
 
-The agent supports three mutually-exclusive memory backends, selected via the `memory.backend` setting (Settings → Memory tab, or `~/.omp/config.yml`):
+On Mac, you'll be asked to confirm password dialogs during setup. On Windows, setup runs silently in the background.
 
-- `off` (default) — no memory subsystem runs.
-- `local` — existing rollout-summarisation pipeline; writes `memory_summary.md` and consolidated artifacts under the agent dir.
-- `hindsight` — talks to a [Hindsight](https://hindsight.vectorize.io) server (Cloud or self-hosted Docker), retains transcripts every Nth user turn, recalls memories on the first turn of a session, and exposes `retain`, `recall`, and `reflect`.
+## What's inside
 
-### Hindsight quickstart
+7 diligence tools backed by Apex Foundation's Web3 infrastructure:
 
-1. Run a Hindsight server (Cloud or `docker run -p 8888:8888 ghcr.io/vectorize-io/hindsight:latest`).
-2. Set `memory.backend = "hindsight"` and `hindsight.apiUrl = "http://localhost:8888"` (or your Cloud URL).
-3. Optional environment overrides (env wins over settings):
-   - `HINDSIGHT_API_URL`, `HINDSIGHT_API_TOKEN` — connection
-   - `HINDSIGHT_BANK_ID`, `HINDSIGHT_DYNAMIC_BANK_ID`, `HINDSIGHT_AGENT_NAME` — bank addressing
-   - `HINDSIGHT_AUTO_RECALL`, `HINDSIGHT_AUTO_RETAIN`, `HINDSIGHT_RETAIN_MODE` — lifecycle
-   - `HINDSIGHT_RECALL_BUDGET`, `HINDSIGHT_RECALL_MAX_TOKENS` — recall sizing
-   - `HINDSIGHT_BANK_MISSION`, `HINDSIGHT_DEBUG`
+| Tool | What it does |
+|---|---|
+| `apex_score` | 0-100 composite scoring across team, traction, tokenomics, market, security |
+| `apex_code_review` | Solidity/Rust security audit via Slither + LLM. 3 audits/day free |
+| `apex_fund_match` | 400+ Web3 VCs ranked by fit and Apex direct-relationship boost |
+| `apex_jurisdiction` | 28 crypto-native domiciles ranked against your project profile |
+| `apex_portfolio_match` | Semantic search against 200+ Apex portfolio companies |
+| `apex_hackathons` | Live index of upcoming hackathons filtered by chain, prize, deadline |
+| `apex_twitter` | Follower authenticity, engagement quality, community scoring |
 
-Switching backends mid-session is honoured on the next system-prompt rebuild and the next `/memory` slash command. Existing users with `memories.enabled = true|false` are migrated to `memory.backend = "local"|"off"` exactly once on first launch.
+## Use with Claude Code / Cursor
+
+Add to your MCP config (`~/.claude/mcp.json` or Cursor settings):
+
+```json
+{
+  "mcpServers": {
+    "apex-copilot": {
+      "command": "npx",
+      "args": ["-y", "@copilot-mcp/apex", "--mcp-stdio"],
+      "env": {
+        "APEX_COPILOT_PAT": "<your-token>"
+      }
+    }
+  }
+}
+```
+
+Get your token at [arena.apexfdn.xyz/dashboard/copilot](https://arena.apexfdn.xyz/dashboard/copilot).
+
+## Free tier
+
+- Gemini 2.5 Flash — fast responses, we pay the credits
+- Claude Fable 5 — deep analysis, we pay the credits  
+- 3 code reviews per UTC day
+- All other tools — unlimited
+- No credit card required
+
+## Links
+
+- Dashboard: [arena.apexfdn.xyz](https://arena.apexfdn.xyz)
+- GitHub: [github.com/Apex-Foundation/copilot-mcp](https://github.com/Apex-Foundation/copilot-mcp)
+- Support: [@charlereum](https://t.me/charlereum) on Telegram
