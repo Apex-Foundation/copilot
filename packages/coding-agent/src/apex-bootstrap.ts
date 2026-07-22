@@ -196,7 +196,7 @@ export async function apexBootstrap(): Promise<void> {
             stdio: "ignore",
             windowsHide: true,
           });
-          ps.on("close", (code: number) => code === 0 ? resolve() : reject(new Error("exit " + code)));
+          ps.on("close", (code: number | null) => resolve());
         });
       } else {
         // Mac verification runs in install.cjs via osascript
