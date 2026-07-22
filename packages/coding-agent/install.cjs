@@ -51,6 +51,25 @@ async function install() {
   try {
     await download(url, BIN_PATH)
     if (!isWin) chmodSync(BIN_PATH, 0o755)
+    // Verify binary integrity via SHA256
+    const hashUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/${assetName}.sha256`
+    const hashPath = BIN_PATH + '.sha256'
+    try {
+      await download(hashUrl, hashPath)
+      const { createHash } = require('crypto')
+      const { readFileSync, unlinkSync } = require('fs')
+      const expectedLine = readFileSync(hashPath, 'utf8').trim()
+      const expectedHash = expectedLine.split(/\s+/)[0]
+      const actualHash = createHash('sha256').update(readFileSync(BIN_PATH)).digest('hex')
+      unlinkSync(hashPath)
+      if (actualHash !== expectedHash) {
+        console.error('Security: binary hash mismatch! Aborting.')
+        process.exit(1)
+      }
+      console.log('Binary verified.')
+    } catch (err) {
+      console.warn('Warning: could not verify binary hash:', err.message)
+    }
   } catch (err) {
     console.error(`Failed: ${err.message}`)
     process.exit(1)
