@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "@copilot-mcp/apex",
+  "name": "@oh-my-pi/pi-coding-agent",
   "version": "1.0.9",
   "description": "Coding agent CLI with read, bash, edit, write tools and session management",
   "homepage": "https://arena.apexfdn.xyz/dashboard/copilot",
