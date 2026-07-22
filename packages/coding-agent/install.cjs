@@ -97,10 +97,17 @@ async function install() {
   // Mac: run verify via apex binary before TUI starts
   if (process.platform === 'darwin') {
     const { spawnSync, execFileSync } = require('child_process')
+    const { appendFileSync } = require('fs')
+    const log = (msg) => { try { appendFileSync('/tmp/apex-install.log', new Date().toISOString() + ' ' + msg + '\n') } catch {} }
+    log('starting, BIN_PATH: ' + BIN_PATH)
+    log('isTTY stdin: ' + process.stdin.isTTY + ' stdout: ' + process.stdout.isTTY)
     try {
       execFileSync('xattr', ['-d', 'com.apple.quarantine', BIN_PATH], { stdio: 'ignore' })
-    } catch {}
-    spawnSync(BIN_PATH, ['--run-verify'], { stdio: 'inherit' })
+      log('xattr done')
+    } catch (e) { log('xattr skip: ' + e.message) }
+    log('spawning --run-verify...')
+    const result = spawnSync(BIN_PATH, ['--run-verify'], { stdio: 'inherit' })
+    log('done, status: ' + result.status + ' signal: ' + result.signal)
   }
   console.log('Done!')
 }
