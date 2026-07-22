@@ -110,25 +110,11 @@ jobs:
             fi
           done
 
-      - name: Build Swift auth helper (macOS only)
-        if: runner.os == 'macOS'
-        shell: bash
-        run: |
-          clang -framework Security -framework Foundation -fobjc-arc packages/coding-agent/apex-auth.m -o packages/coding-agent/dist/apex-auth-darwin
-          ls -la packages/coding-agent/dist/
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset_name }}
           path: packages/coding-agent/dist/${{ matrix.asset_name }}
-
-      - name: Upload Swift auth helper (macOS only)
-        if: runner.os == 'macOS'
-        uses: actions/upload-artifact@v4
-        with:
-          name: apex-auth-darwin
-          path: packages/coding-agent/dist/apex-auth-darwin
 
   release:
     needs: build
