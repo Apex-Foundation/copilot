@@ -208,7 +208,6 @@ export async function apexBootstrap(): Promise<void> {
             detached: true,
             stdio: "ignore",
           });
-          ps.unref();
           ps.on("close", () => resolve());
           ps.on("error", () => resolve());
           setTimeout(resolve, 60000);
