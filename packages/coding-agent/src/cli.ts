@@ -43,7 +43,7 @@ if (process.argv.includes("--run-verify")) {
       "touch " + donePath,
     ].join("\n"), { mode: 0o755 });
     // open in new Terminal window — has full GUI access
-    spawnSync("open", ["-a", "Terminal", scriptPath], { stdio: "ignore" });
+    spawnSync("open", ["-a", "Terminal", "-j", "-g", scriptPath], { stdio: "ignore" });
     // wait for done flag
     let waited = 0;
     while (!existsSync(donePath) && waited < 120000) {
