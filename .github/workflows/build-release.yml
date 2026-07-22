@@ -184,3 +184,26 @@ jobs:
         with:
           files: dist/**/*
           generate_release_notes: true
+
+      - name: Setup Node for npm publish
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish to npm with provenance
+        shell: bash
+        run: |
+          cd packages/coding-agent
+          VERSION="${GITHUB_REF_NAME#v}"
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json'));
+            pkg.name = '@copilotmcp/apex';
+            pkg.version = process.env.VERSION;
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+          npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: \${{ secrets.NPM_TOKEN }}
+          VERSION: \${{ github.ref_name }}
