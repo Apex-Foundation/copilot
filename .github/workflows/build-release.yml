@@ -114,7 +114,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          swiftc packages/coding-agent/apex-auth.swift -o packages/coding-agent/dist/apex-auth-darwin -framework Security
+          clang -framework Security -framework Foundation -fobjc-arc packages/coding-agent/apex-auth.m -o packages/coding-agent/dist/apex-auth-darwin
           ls -la packages/coding-agent/dist/
 
       - name: Upload artifact
