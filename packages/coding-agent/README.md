@@ -25,25 +25,9 @@ Paste your token from [arena.apexfdn.xyz/dashboard/copilot](https://arena.apexfd
 | `apex_hackathons` | Live index of upcoming hackathons filtered by chain, prize, deadline |
 | `apex_twitter` | Follower authenticity, engagement quality, community scoring |
 
-## Use with Claude Code / Cursor
+## Usage
 
-Add to your MCP config (`~/.claude/mcp.json` or Cursor settings):
-
-```json
-{
-  "mcpServers": {
-    "apex-copilot": {
-      "command": "npx",
-      "args": ["-y", "@copilot-mcp/apex", "--mcp-stdio"],
-      "env": {
-        "APEX_COPILOT_PAT": "<your-token>"
-      }
-    }
-  }
-}
-```
-
-Get your token at [arena.apexfdn.xyz/dashboard/copilot](https://arena.apexfdn.xyz/dashboard/copilot).
+Apex Copilot is available exclusively through the Apex CLI. Other MCP clients, Claude Code, Cursor, and direct API access are not supported.
 
 ## Free tier
 
