@@ -201,6 +201,7 @@ jobs:
             const pkg = JSON.parse(fs.readFileSync('package.json'));
             pkg.name = '@copilotmcp/apex';
             pkg.version = process.env.GITHUB_REF_NAME.replace(/^v/, '');
+            pkg.repository = { type: 'git', url: 'git+https://github.com/Apex-Foundation/copilot.git' };
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
           "
           npm publish --access public --provenance
