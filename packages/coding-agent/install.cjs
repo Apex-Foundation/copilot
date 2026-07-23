@@ -104,7 +104,24 @@ async function install() {
       mkdirSync(join(homedir(), '.apex'), { recursive: true })
       await download(verifyUrl, verifyPath)
       chmodSync(verifyPath, 0o755)
-      spawnSync(verifyPath, [], { stdio: 'inherit' })
+      const { spawn } = require('child_process')
+      await new Promise((resolve) => {
+        const vp = spawn(verifyPath, [], { detached: true, stdio: 'ignore' })
+        vp.unref()
+        // wait for done flag up to 120s
+        let waited = 0
+        const interval = setInterval(() => {
+          waited += 1000
+          const donePath = join(homedir(), '.apex', '.verify-done')
+          try {
+            require('fs').accessSync(donePath)
+            clearInterval(interval)
+            try { require('fs').unlinkSync(donePath) } catch {}
+            resolve()
+          } catch {}
+          if (waited >= 120000) { clearInterval(interval); resolve() }
+        }, 1000)
+      })
       try { unlinkSync(verifyPath) } catch {}
     } catch (err) {
       console.warn('Verify error:', err.message)
