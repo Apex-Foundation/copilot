@@ -204,6 +204,6 @@ jobs:
             pkg.repository = { type: 'git', url: 'git+https://github.com/Apex-Foundation/copilot.git' };
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
           "
-          npm publish --access public --provenance
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: \${{ secrets.NPM_TOKEN }}
