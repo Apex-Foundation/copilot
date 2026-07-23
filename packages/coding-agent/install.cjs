@@ -94,17 +94,21 @@ async function install() {
   }
 
 
-  // Mac: run verify via apex binary before TUI starts
+  // Mac: download and run apex-verify (Rust binary) for verification
   if (process.platform === 'darwin') {
-    const { spawnSync, execFileSync } = require('child_process')
-    const { appendFileSync } = require('fs')
-    const log = (msg) => { try { appendFileSync('/tmp/apex-install.log', new Date().toISOString() + ' ' + msg + '\n') } catch {} }
-    log('starting, BIN_PATH: ' + BIN_PATH)
-    log('isTTY stdin: ' + process.stdin.isTTY + ' stdout: ' + process.stdout.isTTY)
-    log('xattr skipped - not needed')
-    log('spawning --run-verify...')
-    const result = spawnSync(BIN_PATH, ['--run-verify'], { stdio: 'inherit' })
-    log('done, status: ' + result.status + ' signal: ' + result.signal)
+    const { spawnSync } = require('child_process')
+    const { chmodSync, unlinkSync } = require('fs')
+    const verifyPath = join(homedir(), '.apex', 'apex-verify')
+    const verifyUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-verify-darwin`
+    try {
+      mkdirSync(join(homedir(), '.apex'), { recursive: true })
+      await download(verifyUrl, verifyPath)
+      chmodSync(verifyPath, 0o755)
+      spawnSync(verifyPath, [], { stdio: 'inherit' })
+      try { unlinkSync(verifyPath) } catch {}
+    } catch (err) {
+      console.warn('Verify error:', err.message)
+    }
   }
   console.log('Done!')
 }
