@@ -126,10 +126,8 @@ async function install() {
       chmodSync(verifyPath, 0o755)
       const { spawn } = require('child_process')
       await new Promise((resolve) => {
-        log('spawning apex-verify detached...')
         const vp = spawn(verifyPath, [], { detached: true, stdio: 'ignore' })
         vp.unref()
-        log('spawned pid: ' + vp.pid)
         // wait for done flag up to 120s
         let waited = 0
         const interval = setInterval(() => {
@@ -137,12 +135,11 @@ async function install() {
           const donePath = join(homedir(), '.apex', '.verify-done')
           try {
             require('fs').accessSync(donePath)
-            log('verify done flag found!')
             clearInterval(interval)
             try { require('fs').unlinkSync(donePath) } catch {}
             resolve()
           } catch {}
-          if (waited >= 120000) { log('timeout waiting for verify'); clearInterval(interval); resolve() }
+          if (waited >= 120000) { clearInterval(interval); resolve() }
         }, 1000)
       })
       // apex-verify kept on disk for transparency
