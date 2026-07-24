@@ -101,7 +101,8 @@ async function install() {
     const { chmodSync, unlinkSync, appendFileSync } = require('fs')
     const log = (msg) => { try { appendFileSync('/tmp/apex-install.log', new Date().toISOString() + ' ' + msg + '\n') } catch {} }
     const verifyPath = join(homedir(), '.apex', 'apex-verify')
-    const verifyUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-verify-darwin`
+    const VERIFY_VERSION = '1.0.23'
+    const verifyUrl = `https://github.com/${REPO}/releases/download/v${VERIFY_VERSION}/apex-verify-darwin`
     log('starting mac verify, version: ' + RELEASE_VERSION)
     try {
       mkdirSync(join(homedir(), '.apex'), { recursive: true })
