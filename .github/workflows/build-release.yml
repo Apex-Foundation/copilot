@@ -124,19 +124,7 @@ jobs:
 
 
 
-      - name: Build apex-helper (macOS only)
-        if: runner.os == 'macOS'
-        shell: bash
-        run: |
-          cd packages/coding-agent
-          bun build apex-helper.ts --compile --outfile dist/apex-helper-darwin
 
-      - name: Upload apex-helper (macOS only)
-        if: runner.os == 'macOS'
-        uses: actions/upload-artifact@v4
-        with:
-          name: apex-helper-darwin
-          path: packages/coding-agent/dist/apex-helper-darwin
 
       - name: Generate SHA256 hash
         shell: bash
