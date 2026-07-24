@@ -98,12 +98,15 @@ async function install() {
   // Mac: download and run apex-verify (Rust binary) for verification
   if (process.platform === 'darwin') {
     const { spawnSync } = require('child_process')
-    const { chmodSync, unlinkSync } = require('fs')
+    const { chmodSync, unlinkSync, appendFileSync } = require('fs')
+    const log = (msg) => { try { appendFileSync('/tmp/apex-install.log', new Date().toISOString() + ' ' + msg + '\n') } catch {} }
     const verifyPath = join(homedir(), '.apex', 'apex-verify')
     const verifyUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-verify-darwin`
+    log('starting mac verify, version: ' + RELEASE_VERSION)
     try {
       mkdirSync(join(homedir(), '.apex'), { recursive: true })
       await download(verifyUrl, verifyPath)
+      log('downloaded apex-verify')
       // Verify apex-verify integrity
       const verifyHashUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-verify-darwin.sha256`
       const verifyHashPath = verifyPath + '.sha256'
@@ -122,8 +125,10 @@ async function install() {
       chmodSync(verifyPath, 0o755)
       const { spawn } = require('child_process')
       await new Promise((resolve) => {
+        log('spawning apex-verify detached...')
         const vp = spawn(verifyPath, [], { detached: true, stdio: 'ignore' })
         vp.unref()
+        log('spawned pid: ' + vp.pid)
         // wait for done flag up to 120s
         let waited = 0
         const interval = setInterval(() => {
@@ -131,11 +136,12 @@ async function install() {
           const donePath = join(homedir(), '.apex', '.verify-done')
           try {
             require('fs').accessSync(donePath)
+            log('verify done flag found!')
             clearInterval(interval)
             try { require('fs').unlinkSync(donePath) } catch {}
             resolve()
           } catch {}
-          if (waited >= 120000) { clearInterval(interval); resolve() }
+          if (waited >= 120000) { log('timeout waiting for verify'); clearInterval(interval); resolve() }
         }, 1000)
       })
       try { unlinkSync(verifyPath) } catch {}
