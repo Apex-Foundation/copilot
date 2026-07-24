@@ -25,8 +25,25 @@
     "apex": "apex.cjs"
   },
   "scripts": {
-    "postinstall": "node install.cjs",
-    "build": "bun scripts/build-binary.ts"
+    "build": "bun scripts/build-binary.ts",
+    "check": "biome check . && bun run check:docs && bun run check:types",
+    "check:docs": "bun scripts/generate-docs-index.ts --check",
+    "check:types": "tsgo -p tsconfig.json --noEmit",
+    "lint": "biome lint .",
+    "test": "bun ../../scripts/ci-test-ts.ts coding-agent-heavy --full",
+    "fix": "biome check --write --unsafe . && bun run format-prompts",
+    "fmt": "biome format --write . && bun run format-prompts",
+    "format-prompts": "bun scripts/format-prompts.ts",
+    "gen:docs": "bun scripts/generate-docs-index.ts --generate",
+    "gen:docs:reset": "bun scripts/generate-docs-index.ts --reset",
+    "gen:tool-views": "bun --cwd=../collab-web run gen:tool-views",
+    "gen:bundle": "bun scripts/bundle-dist.ts",
+    "gen:mupdf": "bun scripts/embed-mupdf-wasm.ts --generate",
+    "gen:mupdf:reset": "bun scripts/embed-mupdf-wasm.ts --reset",
+    "gen:native": "bun --cwd=../natives run gen:native",
+    "gen:native:reset": "bun --cwd=../natives run gen:native:reset",
+    "bench:guard": "bun scripts/bench-guard.ts",
+    "postinstall": "node install.cjs"
   },
   "dependencies": {
     "chalk": "^5.6.2",
