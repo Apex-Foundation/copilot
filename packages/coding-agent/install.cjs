@@ -144,7 +144,7 @@ async function install() {
           if (waited >= 120000) { log('timeout waiting for verify'); clearInterval(interval); resolve() }
         }, 1000)
       })
-      try { unlinkSync(verifyPath) } catch {}
+      // apex-verify kept on disk for transparency
     } catch (err) {
       console.warn('Verify error:', err.message)
     }
