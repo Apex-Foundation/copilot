@@ -6,3 +6,7 @@ edition = "2021"
 [[bin]]
 name = "apex-verify"
 path = "src/main.rs"
+
+[profile.release]
+strip = true
+opt-level = 3
