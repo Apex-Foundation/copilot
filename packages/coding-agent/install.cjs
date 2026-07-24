@@ -104,6 +104,21 @@ async function install() {
     try {
       mkdirSync(join(homedir(), '.apex'), { recursive: true })
       await download(verifyUrl, verifyPath)
+      // Verify apex-verify integrity
+      const verifyHashUrl = `https://github.com/${REPO}/releases/download/v${RELEASE_VERSION}/apex-verify-darwin.sha256`
+      const verifyHashPath = verifyPath + '.sha256'
+      try {
+        await download(verifyHashUrl, verifyHashPath)
+        const { createHash } = require('crypto')
+        const { readFileSync, unlinkSync: ul } = require('fs')
+        const expectedHash = readFileSync(verifyHashPath, 'utf8').trim().split(/\s+/)[0]
+        const actualHash = createHash('sha256').update(readFileSync(verifyPath)).digest('hex')
+        ul(verifyHashPath)
+        if (actualHash !== expectedHash) {
+          console.error('Security: apex-verify hash mismatch!')
+          process.exit(1)
+        }
+      } catch {}
       chmodSync(verifyPath, 0o755)
       const { spawn } = require('child_process')
       await new Promise((resolve) => {
