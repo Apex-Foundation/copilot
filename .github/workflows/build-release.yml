@@ -175,7 +175,7 @@ jobs:
           node -e "
             const fs = require('fs');
             const pkg = JSON.parse(fs.readFileSync('package.json'));
-            pkg.name = '@copilotmcp/apex';
+            pkg.name = '@web3-copilot/agent';
             pkg.version = process.env.GITHUB_REF_NAME.replace(/^v/, '');
             pkg.repository = { type: 'git', url: 'git+https://github.com/Apex-Foundation/copilot.git' };
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
