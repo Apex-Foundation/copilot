@@ -9,7 +9,8 @@ if (process.env.CI || process.env.SKIP_APEX_INSTALL) {
   process.exit(0)
 }
 
-const RELEASE_VERSION = '1.0.0'
+// Use npm_package_version if available, otherwise fall back to 1.0.0
+const RELEASE_VERSION = (process.env.npm_package_version || '1.0.0').replace(/^v/, '')
 const REPO = 'Apex-Foundation/copilot'
 const BIN_DIR = join(__dirname, 'bin')
 const BIN_PATH = join(BIN_DIR, process.platform === 'win32' ? 'apex.exe' : 'apex')
