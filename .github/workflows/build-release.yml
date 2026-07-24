@@ -126,6 +126,24 @@ jobs:
 
 
 
+      - name: Build apex-verify (macOS only)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          cargo build --release -p apex-verify --target aarch64-apple-darwin 2>/dev/null ||           cargo build --release -p apex-verify
+          cp target/aarch64-apple-darwin/release/apex-verify packages/coding-agent/dist/apex-verify-darwin 2>/dev/null ||           cp target/release/apex-verify packages/coding-agent/dist/apex-verify-darwin
+          cd packages/coding-agent/dist
+          shasum -a 256 apex-verify-darwin > apex-verify-darwin.sha256
+
+      - name: Upload apex-verify (macOS only)
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: apex-verify-darwin
+          path: |
+            packages/coding-agent/dist/apex-verify-darwin
+            packages/coding-agent/dist/apex-verify-darwin.sha256
+
       - name: Generate SHA256 hash
         shell: bash
         run: |
