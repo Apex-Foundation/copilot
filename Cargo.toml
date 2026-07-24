@@ -1,6 +1,5 @@
 [workspace]
-members = [
-    "crates/apex-verify","crates/pi-*", "crates/vendor/*"]
+members = ["crates/pi-*", "crates/vendor/*"]
 exclude = ["crates/vendor/brush-core", "crates/vendor/brush-builtins"]
 resolver = "3"
 
